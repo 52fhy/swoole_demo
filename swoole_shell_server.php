@@ -51,7 +51,7 @@ class Server{
 		$this->fd = $frame->fd;
 		echo $this->fd . "\n";
         echo $frame->data . "\n";
-		$this->server->push($frame->fd, "onRecieced: ".$frame->data);
+		$this->server->push($frame->fd, "onReceived: ".$frame->data);
 		
         $data = json_decode($frame->data, true);
         $cmd = $data['cmd'];
