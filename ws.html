@@ -1,0 +1,21 @@
+<script>
+socket = new WebSocket('ws://192.168.1.107:9501/'); 
+console.log(socket); 
+socket.onopen = function(evt) { 
+    // 发送一个初始化消息
+    //socket.send('{"cmd":"ls -l", "is_block":"0"}'); 
+    //socket.send('{"cmd":"exit", "is_block":"0"}'); 
+    socket.send('{"cmd":"iostat -d -k 2", "is_block":"1"}'); 
+}; 
+// 监听消息
+socket.onmessage = function(event) { 
+    console.log('Client received a message', event.data); 
+}; 
+// 监听Socket的关闭
+socket.onclose = function(event) { 
+    console.log('Client notified socket has closed',event); 
+}; 
+socket.onerror = function(evt) { 
+    console.log('Client onerror',event); 
+}; 
+</script>
