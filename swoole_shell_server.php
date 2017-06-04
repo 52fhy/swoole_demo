@@ -5,6 +5,7 @@ class Server{
     private $process;
 	
 	private $fd;
+	private $i;
 
     private $async_process = [];
 
@@ -38,7 +39,7 @@ class Server{
         swoole_process::signal(SIGCHLD, function ($sig){//在一个进程终止或者停止时，将SIGCHLD信号发送给其父进程
             while ($ret = swoole_process::wait(false)){//swoole_process::wait 回收结束运行的子进程
                 echo "PID={$ret['pid']} exit.\n";
-				unset($this->async_process[$this->fd]);
+				unset($this->async_process[$this->fd]);//清理掉无用进程信息
             }
         });
     }
@@ -48,7 +49,10 @@ class Server{
 	}
 
     public function onMessage($server, $frame){
-		$this->fd = $frame->fd;
+		$this->i++;//不要使用类属性，会造成不一致。当多个客户端连接，这个值不会针对每个连接保存一份
+		echo $this->i . "\n";
+		
+		$this->fd = $frame->fd;//这个类属性是可以的，因为是根据形参在变化，每个客户端的fd不一样
 		echo $this->fd . "\n";
         echo $frame->data . "\n";
 		$this->server->push($frame->fd, "onReceived: ".$frame->data);
@@ -58,7 +62,7 @@ class Server{
         $is_block = isset($data['is_block']) ? $data['is_block'] : 0;//标注进程类型
         if($is_block){
             if(isset($this->async_process[$frame->fd])){
-                $process = $this->async_process[$frame->fd];//这里有个Bug，如果子进程调用$worker->exit()退出后，这里fd还是不变的
+                $process = $this->async_process[$frame->fd];
             }else{
 				//对于top这样的命令，运行后不会退出，新建一个临时进程。运行后需要手动退出
                 $process = new swoole_process(array($this, 'onTmpProcess'), true, 2);
