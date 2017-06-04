@@ -121,3 +121,12 @@ class Server{
 }
 
 new Server();
+
+/*运行说明：
+* 1、如果运行ls这样的命令，运行完可以接着运行其他命令
+* {"cmd":"ls -l", "is_block":"0"}
+* 2、如果运行gdb这样的命令，运行后会进入到gdb的交互式命令行，需要执行quit退出交互式命令行，再执行exit杀掉临时进程
+* {"cmd":"gdb", "is_block":"1"}
+* {"cmd":"quit", "is_block":"1"}
+* {"cmd":"exit", "is_block":"1"}
+*/
