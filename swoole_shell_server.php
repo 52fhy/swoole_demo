@@ -5,7 +5,6 @@ class Server{
     private $process;
 	
 	private $fd;
-	private $i;
 
     private $async_process = [];
 
@@ -49,8 +48,6 @@ class Server{
 	}
 
     public function onMessage($server, $frame){
-		$this->i++;//不要使用类属性，会造成不一致。当多个客户端连接，这个值不会针对每个连接保存一份
-		echo $this->i . "\n";
 		
 		$this->fd = $frame->fd;//这个类属性是可以的，因为是根据形参在变化，每个客户端的fd不一样
 		echo $this->fd . "\n";
