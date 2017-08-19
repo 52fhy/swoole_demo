@@ -24,7 +24,7 @@ class Server{
 		$this->server->on('close', array($this, 'onClose'));
 
 		//该进程默认用来处理运行后直接退出的命令
-        $this->process = new swoole_process(array($this, 'onProcess'), true);//第3个参数数设置为true，进程内echo将不是打印屏幕，写入到管道。
+        $this->process = new swoole_process(array($this, 'onProcess'), true);//第2个参数数设置为true，进程内echo将不是打印屏幕，写入到管道。
         $this->server->addProcess($this->process);//添加一个用户自定义的工作进程。
         $this->server->start();
     }
